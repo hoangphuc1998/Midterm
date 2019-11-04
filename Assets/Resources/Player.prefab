@@ -58,7 +58,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &673731197
 MonoBehaviour:
@@ -294,7 +294,7 @@ GameObject:
   - component: {fileID: 2991599949903960389}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -465,3 +465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1eb9fbba4e0a3f4faacf80fcd83ae39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bar: {fileID: 1589593824}
+  maxHealth: 20
+  explosion: {fileID: 7874355125959283838, guid: 9542816f53749ad40aa205e785fbac66,
+    type: 3}

@@ -1,18 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class PlayerHealth : MonoBehaviour
+using UnityEngine.UI;
+using Photon.Pun;
+public class PlayerHealth : MonoBehaviourPun
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    public Image bar;
+    private int health = 20;
+    public int maxHealth = 20;
+    public GameObject explosion;
     void Update()
     {
+        bar.fillAmount = (float) health / (float) maxHealth;
+    }
+    [PunRPC]
+    public void DecreaseHealth(int damage, Vector3 pos)
+    {
+        health -= damage;
         
+        GameObject effect = Instantiate(explosion, pos, Quaternion.identity);
+        Destroy(effect, 5f);
     }
 }
