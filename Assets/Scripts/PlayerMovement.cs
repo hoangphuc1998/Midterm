@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Photon.Pun;
 using System;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviourPun, IPunObservable
 {
     public PhotonView photonview;
     public float moveSpeed = 5f;
-    public float moveSmoothSpeed = 10f;
-    public float rotationSmoothSpeed = 10f;
+    public float moveSmoothSpeed = 5f;
+    public float rotationSmoothSpeed = 5f;
     private Rigidbody2D rb;
     Vector2 movement;
     private GameObject scenceCamera;
@@ -22,13 +23,17 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     public Transform firePoint;
     public float bulletForce = 1f;
 
-    public Canvas canvas;
+    private Image playerFill, enemyFill;
+    private int playerHealth = 20;
+    private int enemyHealth = 20;
+    public int maxHealth = 20;
     void Start()
     {
-        canvas.worldCamera = Camera.main;
+        rb = GetComponent<Rigidbody2D>();
+        playerFill = GameObject.Find("PlayerFill").GetComponent<Image>();
+        enemyFill = GameObject.Find("EnemyFill").GetComponent<Image>();
         if (photonView.IsMine)
-        {
-            rb = GetComponent<Rigidbody2D>();
+        {            
             scenceCamera = GameObject.Find("Main Camera");
             cam = Camera.main;
         }
@@ -36,21 +41,25 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     // Update is called once per frame
     void Update()
     {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = 0;
+        
         if (photonView.IsMine)
         {
+            playerFill.fillAmount = (float)playerHealth / (float)maxHealth;
+            enemyFill.fillAmount = (float)enemyHealth / (float)maxHealth;
             ProcessInput();
         }
         else
         {
             SmoothMovement();
         }
-        canvas.GetComponent<RectTransform>().Rotate(new Vector3(0, 0, 0));
     }
     private void ProcessInput()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + movement * moveSpeed * Time.deltaTime);
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
         Vector2 lookDir = mousePos - rb.position;
@@ -83,11 +92,19 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         {
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
+            stream.SendNext(this.playerHealth);
         }
         else if (stream.IsReading)
         {
             smoothMove = (Vector3)stream.ReceiveNext();
             smoothRotation = (Quaternion)stream.ReceiveNext();
+            enemyHealth = (int)stream.ReceiveNext();
         }
+    }
+
+    [PunRPC]
+    public void DecreaseHealth(int damage)
+    {
+        playerHealth -= damage;
     }
 }

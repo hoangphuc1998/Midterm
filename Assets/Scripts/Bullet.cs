@@ -8,6 +8,8 @@ public class Bullet : MonoBehaviourPun
 
     public float destroyTime = 2f;
 
+    public GameObject explosion;
+
     IEnumerator destroyBullet()
     {
         yield return new WaitForSeconds(destroyTime);
@@ -21,10 +23,16 @@ public class Bullet : MonoBehaviourPun
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.tag.Equals("Player"))
+        GameObject otherGO = other.gameObject;
+        if (otherGO.tag.Equals("Player"))
         {
-            other.gameObject.GetPhotonView().RPC("DecreaseHealth", RpcTarget.All, 1, transform.position);
+            if (otherGO.GetComponent<PhotonView>().IsMine)
+            {
+                other.gameObject.GetPhotonView().RPC("DecreaseHealth", RpcTarget.All, 1);
+            }
             Destroy(this.gameObject);
+            GameObject effect = Instantiate(explosion, transform.position, Quaternion.identity);
+            Destroy(effect, 5f);
         }
     }
     
