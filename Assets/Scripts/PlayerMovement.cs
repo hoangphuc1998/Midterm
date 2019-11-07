@@ -22,8 +22,10 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     public Transform firePoint;
     public float bulletForce = 1f;
 
+    public Canvas canvas;
     void Start()
     {
+        canvas.worldCamera = Camera.main;
         if (photonView.IsMine)
         {
             rb = GetComponent<Rigidbody2D>();
@@ -42,6 +44,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         {
             SmoothMovement();
         }
+        canvas.GetComponent<RectTransform>().Rotate(new Vector3(0, 0, 0));
     }
     private void ProcessInput()
     {
