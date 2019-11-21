@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviourPun
             }
             Destroy(this.gameObject);
             GameObject effect = Instantiate(explosion, transform.position, Quaternion.identity);
-            Destroy(effect, 5f);
+            Destroy(effect, 1f);
         }
     }
     

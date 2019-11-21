@@ -23,17 +23,25 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     public Transform firePoint;
     public float bulletForce = 1f;
 
-    private Image playerFill, enemyFill;
+    private Image playerFill, enemyFill, ammoFill;
     private int playerHealth = 20;
     private int enemyHealth = 20;
     public int maxHealth = 20;
+
+    //Ammo reloading
+    public int maxAmmo = 10;
+    private int currentAmmo;
+    private bool isReloading = false;
+    public float reloadTime = 2f;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerFill = GameObject.Find("PlayerFill").GetComponent<Image>();
         enemyFill = GameObject.Find("EnemyFill").GetComponent<Image>();
+        ammoFill = GameObject.Find("AmmoFill").GetComponent<Image>();
         if (photonView.IsMine)
-        {            
+        {
+            currentAmmo = maxAmmo;
             scenceCamera = GameObject.Find("Main Camera");
             cam = Camera.main;
         }
@@ -47,11 +55,12 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         if (photonView.IsMine)
         {
             playerFill.fillAmount = (float)playerHealth / (float)maxHealth;
-            enemyFill.fillAmount = (float)enemyHealth / (float)maxHealth;
+            ammoFill.fillAmount = (float)currentAmmo / (float)maxAmmo;
             ProcessInput();
         }
         else
         {
+            enemyFill.fillAmount = (float)enemyHealth / (float)maxHealth;
             SmoothMovement();
         }
     }
@@ -67,8 +76,24 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         rb.rotation = angle;
         if (Input.GetButtonDown("Fire1"))
         {
+            if (isReloading)
+                return;
+            if (currentAmmo <= 0)
+            {
+                StartCoroutine(Reload());
+                return;
+            }
+            currentAmmo--;
             photonView.RPC("Shoot", RpcTarget.All, firePoint.position, firePoint.rotation, firePoint.up);
         }
+    }
+
+    IEnumerator Reload()
+    {
+        isReloading = true;
+        yield return new WaitForSeconds(reloadTime);
+        currentAmmo = maxAmmo;
+        isReloading = false;
     }
 
     [PunRPC]
@@ -92,13 +117,15 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         {
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
-            stream.SendNext(this.playerHealth);
+            stream.SendNext(playerHealth);
         }
         else if (stream.IsReading)
         {
             smoothMove = (Vector3)stream.ReceiveNext();
             smoothRotation = (Quaternion)stream.ReceiveNext();
             enemyHealth = (int)stream.ReceiveNext();
+            Debug.Log(photonView.IsMine);
+            Debug.Log(enemyHealth);
         }
     }
 
