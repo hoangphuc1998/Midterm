@@ -18,6 +18,8 @@ public class Bullet : MonoBehaviourPun
 
     void Start()
     {
+        Physics2D.IgnoreLayerCollision(8, 9);
+        Physics2D.IgnoreLayerCollision(9, 9);
         StartCoroutine("destroyBullet");
     }
 
@@ -30,6 +32,12 @@ public class Bullet : MonoBehaviourPun
             {
                 other.gameObject.GetPhotonView().RPC("DecreaseHealth", RpcTarget.All, 1);
             }
+            Destroy(this.gameObject);
+            GameObject effect = Instantiate(explosion, transform.position, Quaternion.identity);
+            Destroy(effect, 1f);
+        }
+        else if (otherGO.tag.Equals("Walls"))
+        {
             Destroy(this.gameObject);
             GameObject effect = Instantiate(explosion, transform.position, Quaternion.identity);
             Destroy(effect, 1f);
