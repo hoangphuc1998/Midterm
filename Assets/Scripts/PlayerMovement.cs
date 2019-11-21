@@ -33,27 +33,77 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     private int currentAmmo;
     private bool isReloading = false;
     public float reloadTime = 2f;
+    
+    //Win lose screen
+    private GameObject winScreen, loseScreen;
+    private GameObject winText, loseText;
+    private bool endGame = false;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerFill = GameObject.Find("PlayerFill").GetComponent<Image>();
         enemyFill = GameObject.Find("EnemyFill").GetComponent<Image>();
         ammoFill = GameObject.Find("AmmoFill").GetComponent<Image>();
+        
         if (photonView.IsMine)
         {
             currentAmmo = maxAmmo;
             scenceCamera = GameObject.Find("Main Camera");
             cam = Camera.main;
+
+            winScreen = GameObject.Find("WinScreen");
+            loseScreen = GameObject.Find("LoseScreen");
+            winText = GameObject.Find("Win");
+            loseText = GameObject.Find("Lose");
+            winScreen.SetActive(false);
+            loseScreen.SetActive(false);
+            winText.SetActive(false);
+            loseText.SetActive(false);
         }
+    }
+    [PunRPC]
+    void endGameVictory()
+    {
+        
+        Debug.Log(photonView.IsMine.ToString() + "Win");
+        if (photonView.IsMine)
+        {
+            loseScreen.SetActive(false);
+            loseText.SetActive(false);
+            winScreen.SetActive(true);
+            winText.SetActive(true);
+        }
+        endGame = true;
     }
     // Update is called once per frame
     void Update()
     {
+        if (endGame) return;
+
         rb.velocity = Vector3.zero;
         rb.angularVelocity = 0;
         
         if (photonView.IsMine)
         {
+            if (playerHealth <= 0)
+            {
+                loseScreen.SetActive(true);
+                loseText.SetActive(true);
+                winScreen.SetActive(false);
+                winText.SetActive(false);
+                Debug.Log(this.gameObject.name + photonView.IsMine.ToString());
+                if (this.gameObject.name.Equals("Player(Clone)"))
+                {
+                    Debug.Log("Player 1 Win");
+                    GameObject.Find("Player 1(Clone)").GetComponent<PhotonView>().RPC("endGameVictory", RpcTarget.Others);
+                }
+                else
+                {
+                    Debug.Log("Player Win");
+                    GameObject.Find("Player(Clone)").GetComponent<PhotonView>().RPC("endGameVictory", RpcTarget.Others);
+                }
+                endGame = true;
+            }
             playerFill.fillAmount = (float)playerHealth / (float)maxHealth;
             ammoFill.fillAmount = (float)currentAmmo / (float)maxAmmo;
             ProcessInput();
@@ -64,6 +114,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
             SmoothMovement();
         }
     }
+
     private void ProcessInput()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
@@ -124,14 +175,15 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
             smoothMove = (Vector3)stream.ReceiveNext();
             smoothRotation = (Quaternion)stream.ReceiveNext();
             enemyHealth = (int)stream.ReceiveNext();
-            Debug.Log(photonView.IsMine);
-            Debug.Log(enemyHealth);
         }
     }
 
     [PunRPC]
     public void DecreaseHealth(int damage)
     {
-        playerHealth -= damage;
+        if (playerHealth >= damage)
+            playerHealth -= damage;
+        else
+            playerHealth = 0;
     }
 }
