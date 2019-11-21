@@ -185,6 +185,8 @@ MonoBehaviour:
   firePoint: {fileID: 6486032298172486949}
   bulletForce: 20
   maxHealth: 20
+  maxAmmo: 10
+  reloadTime: 3
 --- !u!50 &1412870406314342861
 Rigidbody2D:
   serializedVersion: 4
