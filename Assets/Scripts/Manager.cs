@@ -13,6 +13,8 @@ public class Manager : MonoBehaviour
 
     void SpawnPlayer()
     {
-        PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation);
+        GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation);
+        if (!player.GetPhotonView().IsMine) return;
+        Camera.main.GetComponent<CameraMovement>().SetTarget(player.transform);
     }
 }

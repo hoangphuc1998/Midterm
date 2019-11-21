@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6060934837868496552}
   - component: {fileID: 1136725991497652522}
   - component: {fileID: 2578516058308361766}
-  - component: {fileID: 154730943}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -99,6 +98,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   destroyTime: 2
+  explosion: {fileID: 7874355125959283838, guid: 9542816f53749ad40aa205e785fbac66,
+    type: 3}
 --- !u!61 &1136725991497652522
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -146,25 +147,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &154730943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 379555416016596772}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 0
-  OwnershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 0}
-  viewIdField: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0

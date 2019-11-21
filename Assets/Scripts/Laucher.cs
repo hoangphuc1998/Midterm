@@ -8,6 +8,10 @@ public class Laucher : MonoBehaviourPunCallbacks
 {
     public GameObject connectedScreen;
     public GameObject disconnectedScreen;
+    private void Start()
+    {
+        Screen.fullScreen = false;
+    }
     public void OnClick_Connect()
     {
         PhotonNetwork.ConnectUsingSettings();
