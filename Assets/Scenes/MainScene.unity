@@ -137,7 +137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &11640822
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1412,6 +1412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectedScreen: {fileID: 1792882545}
   disconnectedScreen: {fileID: 1836964781}
+  connectButton: {fileID: 176826851}
 --- !u!4 &759067398
 Transform:
   m_ObjectHideFlags: 0

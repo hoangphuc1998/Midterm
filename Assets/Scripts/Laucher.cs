@@ -8,9 +8,10 @@ public class Laucher : MonoBehaviourPunCallbacks
 {
     public GameObject connectedScreen;
     public GameObject disconnectedScreen;
+    public GameObject connectButton;
     private void Start()
     {
-        Screen.fullScreen = false;
+        
     }
     public void OnClick_Connect()
     {
@@ -25,11 +26,13 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
+        connectButton.SetActive(false);
         disconnectedScreen.SetActive(true);
     }
 
     public override void OnJoinedLobby()
     {
+        connectButton.SetActive(false);
         if (disconnectedScreen.activeSelf)
         {
             disconnectedScreen.SetActive(false);
