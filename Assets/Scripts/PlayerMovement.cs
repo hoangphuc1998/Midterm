@@ -36,15 +36,34 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     
     //Win lose screen
     private GameObject winScreen, loseScreen;
-    private GameObject winText, loseText;
     private bool endGame = false;
+
+    //Gem system
+    private int gemCount = 0;
+    public GameObject gem;
+    private bool isSpawning = false;
+    public float respawnTime = 1f;
+    private GameObject playerGem1, playerGem2, player1Gem1, player1Gem2;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerFill = GameObject.Find("PlayerFill").GetComponent<Image>();
         enemyFill = GameObject.Find("EnemyFill").GetComponent<Image>();
         ammoFill = GameObject.Find("AmmoFill").GetComponent<Image>();
-        
+        if (name.Equals("Player(Clone)"))
+        {
+            playerGem1 = GameObject.Find("Player Gem 1");
+            playerGem2 = GameObject.Find("Player Gem 2");
+            playerGem1.SetActive(false);
+            playerGem2.SetActive(false);
+        }
+        else
+        {
+            player1Gem1 = GameObject.Find("Player 1 Gem 1");
+            player1Gem2 = GameObject.Find("Player 1 Gem 2");
+            player1Gem1.SetActive(false);
+            player1Gem2.SetActive(false);
+        }
         if (photonView.IsMine)
         {
             currentAmmo = maxAmmo;
@@ -53,12 +72,8 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
 
             winScreen = GameObject.Find("WinScreen");
             loseScreen = GameObject.Find("LoseScreen");
-            winText = GameObject.Find("Win");
-            loseText = GameObject.Find("Lose");
             winScreen.SetActive(false);
             loseScreen.SetActive(false);
-            winText.SetActive(false);
-            loseText.SetActive(false);
         }
     }
     [PunRPC]
@@ -69,9 +84,20 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         if (photonView.IsMine)
         {
             loseScreen.SetActive(false);
-            loseText.SetActive(false);
             winScreen.SetActive(true);
-            winText.SetActive(true);
+        }
+        endGame = true;
+    }
+
+    [PunRPC]
+    void endGameLoss()
+    {
+
+        Debug.Log(photonView.IsMine.ToString() + "Lose");
+        if (photonView.IsMine)
+        {
+            loseScreen.SetActive(true);
+            winScreen.SetActive(false);
         }
         endGame = true;
     }
@@ -80,33 +106,80 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     {
         if (endGame) return;
 
+        //Update Gem
+        if (name.Equals("Player(Clone)"))
+        {
+            if (gemCount >= 1)
+            {
+                playerGem1.SetActive(true);
+            }
+            if (gemCount >= 2)
+            {
+                playerGem2.SetActive(true);
+            }
+        }
+        else
+        {
+            if (gemCount >= 1)
+            {
+                player1Gem1.SetActive(true);
+            }
+            if (gemCount >= 2)
+            {
+                player1Gem2.SetActive(true);
+            }
+        }
         rb.velocity = Vector3.zero;
         rb.angularVelocity = 0;
         
         if (photonView.IsMine)
         {
+            //Lose game
             if (playerHealth <= 0)
             {
                 loseScreen.SetActive(true);
-                loseText.SetActive(true);
                 winScreen.SetActive(false);
-                winText.SetActive(false);
                 Debug.Log(this.gameObject.name + photonView.IsMine.ToString());
                 if (this.gameObject.name.Equals("Player(Clone)"))
                 {
-                    Debug.Log("Player 1 Win");
                     GameObject.Find("Player 1(Clone)").GetComponent<PhotonView>().RPC("endGameVictory", RpcTarget.Others);
                 }
                 else
                 {
-                    Debug.Log("Player Win");
                     GameObject.Find("Player(Clone)").GetComponent<PhotonView>().RPC("endGameVictory", RpcTarget.Others);
                 }
                 endGame = true;
             }
+            //Win game
+            if (gemCount >= 3)
+            {
+                loseScreen.SetActive(false);
+                winScreen.SetActive(true);
+                Debug.Log(this.gameObject.name + photonView.IsMine.ToString());
+                if (this.gameObject.name.Equals("Player(Clone)"))
+                {
+                    GameObject.Find("Player 1(Clone)").GetComponent<PhotonView>().RPC("endGameLoss", RpcTarget.Others);
+                }
+                else
+                {
+                    GameObject.Find("Player(Clone)").GetComponent<PhotonView>().RPC("endGameLoss", RpcTarget.Others);
+                }
+                endGame = true;
+            }
+
             playerFill.fillAmount = (float)playerHealth / (float)maxHealth;
             ammoFill.fillAmount = (float)currentAmmo / (float)maxAmmo;
             ProcessInput();
+            //Spawn Gem
+            if (isSpawning)
+            {
+                return;
+            }
+            if (GameObject.Find(gem.name +"(Clone)") == null && this.gameObject.name.Equals("Player(Clone)"))
+            {
+                Debug.Log("Spawn Gem");
+                StartCoroutine(spawnGem());
+            }
         }
         else
         {
@@ -115,6 +188,19 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         }
     }
 
+    IEnumerator spawnGem()
+    {
+        isSpawning = true;
+        yield return new WaitForSeconds(respawnTime);
+        photonview.RPC("SpawnGemNetwork", RpcTarget.All);
+        isSpawning = false;
+
+    }
+    [PunRPC]
+    public void SpawnGemNetwork()
+    {
+        Instantiate(gem, gem.transform.position, gem.transform.rotation);
+    }
     private void ProcessInput()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
@@ -125,15 +211,16 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         Vector2 lookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         rb.rotation = angle;
+
+        if (isReloading)
+            return;
+        if (currentAmmo <= 0)
+        {
+            StartCoroutine(Reload());
+            return;
+        }
         if (Input.GetButtonDown("Fire1"))
         {
-            if (isReloading)
-                return;
-            if (currentAmmo <= 0)
-            {
-                StartCoroutine(Reload());
-                return;
-            }
             currentAmmo--;
             photonView.RPC("Shoot", RpcTarget.All, firePoint.position, firePoint.rotation, firePoint.up);
         }
@@ -185,5 +272,11 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
             playerHealth -= damage;
         else
             playerHealth = 0;
+    }
+
+    [PunRPC]
+    public void getGem()
+    {
+        gemCount++;
     }
 }

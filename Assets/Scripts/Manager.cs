@@ -7,6 +7,7 @@ public class Manager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject player1Prefab;
     private GameObject player;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -23,4 +24,11 @@ public class Manager : MonoBehaviour
         if (!player.GetPhotonView().IsMine) return;
         Camera.main.GetComponent<CameraMovement>().SetTarget(player.transform);
     }
+
+    private void Update()
+    {
+        
+    }
+
+    
 }

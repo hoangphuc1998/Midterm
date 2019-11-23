@@ -40,5 +40,8 @@ MonoBehaviour:
   - makeExplosion
   - showVictory
   - endGameVictory
+  - getGem
+  - SpawnGemNetwork
+  - endGameLoss
   DisableAutoOpenWizard: 1
   ShowSettings: 1
