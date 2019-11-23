@@ -161,7 +161,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 3014155359544518892}
-  viewIdField: 2
+  viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &3014155359544518892
@@ -176,13 +176,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9afa119e410934e4d8bcdc5f23f70395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  photonview: {fileID: 0}
+  photonview: {fileID: 346355366691040805}
   moveSpeed: 5
   moveSmoothSpeed: 5
   rotationSmoothSpeed: 20
   bulletPrefab: {fileID: 379555416016596772, guid: 72ab0b3c2be17af41b48cdc4417ac1a2,
     type: 3}
-  firePoint: {fileID: 0}
+  firePoint: {fileID: 6486032298172486949}
   bulletForce: 20
   maxHealth: 20
   maxAmmo: 10
