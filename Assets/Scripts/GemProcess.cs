@@ -24,9 +24,7 @@ public class GemProcess : MonoBehaviour
             if (otherGO.GetComponent<PhotonView>().IsMine)
             {
                 otherGO.GetPhotonView().RPC("getGem", RpcTarget.All);
-
             }
-            Destroy(this.gameObject);
         }
     }
 

@@ -186,9 +186,9 @@ MonoBehaviour:
   bulletForce: 20
   maxHealth: 20
   maxAmmo: 10
-  reloadTime: 3
+  reloadTime: 2
   gem: {fileID: 1346277302442677831, guid: def0000981ce6e248a54bf5a8989ac89, type: 3}
-  respawnTime: 1
+  respawnTime: 10
 --- !u!50 &1412870406314342861
 Rigidbody2D:
   serializedVersion: 4

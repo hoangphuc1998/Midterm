@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     Quaternion smoothRotation;
     public GameObject bulletPrefab;
     public Transform firePoint;
-    public float bulletForce = 1f;
+    public float bulletForce = 10f;
 
     private Image playerFill, enemyFill, ammoFill;
     private int playerHealth = 20;
@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     private int gemCount = 0;
     public GameObject gem;
     private bool isSpawning = false;
-    public float respawnTime = 1f;
+    public float respawnTime = 10f;
     private GameObject playerGem1, playerGem2, player1Gem1, player1Gem2;
     void Start()
     {
@@ -175,7 +175,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
             {
                 return;
             }
-            if (GameObject.Find(gem.name +"(Clone)") == null && this.gameObject.name.Equals("Player(Clone)"))
+            if (GameObject.Find(gem.name +"(Clone)") == null && GameObject.Find(gem.name) == null && this.gameObject.name.Equals("Player(Clone)"))
             {
                 Debug.Log("Spawn Gem");
                 StartCoroutine(spawnGem());
@@ -277,6 +277,12 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     [PunRPC]
     public void getGem()
     {
+        Debug.Log(name + " Gem " + gemCount.ToString());
         gemCount++;
+        GameObject gemGO = GameObject.Find(gem.name);
+        if (gemGO == null)
+            gemGO = GameObject.Find(gem.name + "(Clone)");
+        if (gemGO != null)
+            Destroy(gemGO);
     }
 }

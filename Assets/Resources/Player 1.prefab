@@ -161,7 +161,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 3014155359544518892}
-  viewIdField: 0
+  viewIdField: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &3014155359544518892
@@ -176,19 +176,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9afa119e410934e4d8bcdc5f23f70395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  photonview: {fileID: 346355366691040805}
+  photonview: {fileID: 0}
   moveSpeed: 5
   moveSmoothSpeed: 5
   rotationSmoothSpeed: 20
   bulletPrefab: {fileID: 379555416016596772, guid: 72ab0b3c2be17af41b48cdc4417ac1a2,
     type: 3}
-  firePoint: {fileID: 6486032298172486949}
+  firePoint: {fileID: 0}
   bulletForce: 20
   maxHealth: 20
   maxAmmo: 10
-  reloadTime: 3
+  reloadTime: 2
   gem: {fileID: 1346277302442677831, guid: def0000981ce6e248a54bf5a8989ac89, type: 3}
-  respawnTime: 1
+  respawnTime: 10
 --- !u!50 &1412870406314342861
 Rigidbody2D:
   serializedVersion: 4
