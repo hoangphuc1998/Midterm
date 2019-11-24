@@ -2,7 +2,7 @@
 using Photon.Realtime;
 using UnityEngine;
 
-public class SceneManager
+public static class SceneManager
 {
     private static Sprite robot;
 
