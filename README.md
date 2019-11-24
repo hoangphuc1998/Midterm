@@ -1,5 +1,4 @@
-# Midterm
-Midterm project - Robot Arena
+# Midterm Project - Robot Arena
 
 ![poster](https://github.com/hoangphuc1998/Midterm/blob/master/poster.png)
 
