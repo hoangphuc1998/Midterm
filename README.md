@@ -1,7 +1,7 @@
 # Midterm
 Midterm project - Robot Arena
 
-![poster](https://github.com/hoangphuc1998/Midterm/master/poster.png)
+![poster](https://github.com/hoangphuc1998/Midterm/blob/master/poster.png)
 
 # Team Members
 1. Trang Trung Hoàng Phúc - 1612521.
