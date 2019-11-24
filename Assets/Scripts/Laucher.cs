@@ -9,9 +9,11 @@ public class Laucher : MonoBehaviourPunCallbacks
     public GameObject connectedScreen;
     public GameObject disconnectedScreen;
     public GameObject connectButton;
+    public GameObject quitButton;
+
     private void Start()
     {
-        
+
     }
     public void OnClick_Connect()
     {
@@ -20,19 +22,21 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        
+
         PhotonNetwork.JoinLobby(TypedLobby.Default);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
         connectButton.SetActive(false);
+        quitButton.SetActive(false);
         disconnectedScreen.SetActive(true);
     }
 
     public override void OnJoinedLobby()
     {
         connectButton.SetActive(false);
+        quitButton.SetActive(false);
         if (disconnectedScreen.activeSelf)
         {
             disconnectedScreen.SetActive(false);
@@ -40,4 +44,8 @@ public class Laucher : MonoBehaviourPunCallbacks
         connectedScreen.SetActive(true);
     }
 
+    public void OnClickQuit()
+    {
+        Application.Quit();
+    }
 }
