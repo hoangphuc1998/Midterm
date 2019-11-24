@@ -9,7 +9,6 @@ public static class SceneManager
     public static void LoadScene(Sprite robot)
     {
         SceneManager.robot = robot;
-        PhotonNetwork.LoadLevel(2);
     }
 
     public static Sprite getRobotSprite()
