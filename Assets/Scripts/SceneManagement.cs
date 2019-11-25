@@ -4,14 +4,14 @@ using UnityEngine;
 
 public static class SceneManager
 {
-    private static Sprite robot;
+    private static int robot;
 
-    public static void LoadScene(Sprite robot)
+    public static void LoadScene(int robot)
     {
         SceneManager.robot = robot;
     }
 
-    public static Sprite getRobotSprite()
+    public static int getRobotSprite()
     {
         return SceneManager.robot;
     }

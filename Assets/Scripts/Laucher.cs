@@ -69,7 +69,7 @@ public class Laucher : MonoBehaviourPunCallbacks
         float y = camVertExtent * 3 / 2;
         for (int i = 0; i < robots.Length; i++)
         {
-            drawRobotWithPosition(robots[i], x, y);
+            drawRobotWithPosition(robots[i], x, y, i);
             x += camHorExtent / 2;
             if ((i + 1) % numCols == 0)
             {
@@ -79,7 +79,7 @@ public class Laucher : MonoBehaviourPunCallbacks
         }
     }
 
-    void drawRobotWithPosition(Sprite robot, float x, float y)
+    void drawRobotWithPosition(Sprite robot, float x, float y, int pos)
     {
         GameObject goButton = (GameObject)Instantiate(buttonPrefab);
         goButton.transform.SetParent(chooseCharacterScreen.transform, false);
@@ -89,10 +89,10 @@ public class Laucher : MonoBehaviourPunCallbacks
         tempButton.GetComponentInChildren<Text>().text = "";
         float tempInt = x;
 
-        tempButton.onClick.AddListener(() => ButtonClicked(robot));
+        tempButton.onClick.AddListener(() => ButtonClicked(pos));
 
     }
-    void ButtonClicked(Sprite robot)
+    void ButtonClicked(int robot)
     {
         SceneManager.LoadScene(robot);
         chooseCharacterScreen.SetActive(false);

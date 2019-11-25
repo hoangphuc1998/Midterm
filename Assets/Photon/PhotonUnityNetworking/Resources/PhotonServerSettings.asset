@@ -43,5 +43,6 @@ MonoBehaviour:
   - getGem
   - SpawnGemNetwork
   - endGameLoss
+  - setSprite
   DisableAutoOpenWizard: 1
   ShowSettings: 1

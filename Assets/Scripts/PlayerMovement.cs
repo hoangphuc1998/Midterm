@@ -44,6 +44,13 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     private bool isSpawning = false;
     public float respawnTime = 10f;
     private GameObject playerGem1, playerGem2, player1Gem1, player1Gem2;
+    // Sprite list
+    public Sprite[] sprites;
+    [PunRPC]
+    void setSprite(int pos)
+    {
+        GetComponent<SpriteRenderer>().sprite = sprites[pos];
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -66,6 +73,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         }
         if (photonView.IsMine)
         {
+            photonView.RPC("setSprite", RpcTarget.AllBuffered, SceneManager.getRobotSprite());
             currentAmmo = maxAmmo;
             scenceCamera = GameObject.Find("Main Camera");
             cam = Camera.main;
