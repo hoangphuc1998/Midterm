@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviourPun
         {
             if (otherGO.GetComponent<PhotonView>().IsMine)
             {
-                other.gameObject.GetPhotonView().RPC("DecreaseHealth", RpcTarget.All, 1);
+                other.gameObject.GetPhotonView().RPC("DecreaseHealth", RpcTarget.AllBuffered, 1);
             }
             Destroy(this.gameObject);
             GameObject effect = Instantiate(explosion, transform.position, Quaternion.identity);

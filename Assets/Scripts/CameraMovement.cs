@@ -45,7 +45,7 @@ public class CameraMovement : MonoBehaviour
             float camX = Mathf.Clamp(target.position.x + offset.x, leftBound, rightBound);
             float camY = Mathf.Clamp(target.position.y + offset.y, bottomBound, topBound);
 
-            Vector3 desiredPosition = new Vector3(camX, camY, transform.position.z + offset.z);
+            Vector3 desiredPosition = new Vector3(camX, camY, offset.z);
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
             transform.position = smoothedPosition;
         }
