@@ -46,6 +46,8 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     private GameObject playerGem1, playerGem2, player1Gem1, player1Gem2;
     // Sprite list
     public Sprite[] sprites;
+    //Audio
+    private AudioManager audioManager;
     [PunRPC]
     void setSprite(int pos)
     {
@@ -53,6 +55,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     }
     void Start()
     {
+        audioManager = FindObjectOfType<AudioManager>();
         rb = GetComponent<Rigidbody2D>();
         playerFill = GameObject.Find("PlayerFill").GetComponent<Image>();
         enemyFill = GameObject.Find("EnemyFill").GetComponent<Image>();
@@ -230,6 +233,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
         if (Input.GetButtonDown("Fire1"))
         {
             currentAmmo--;
+            audioManager.Play("Shoot");
             photonView.RPC("Shoot", RpcTarget.All, firePoint.position, firePoint.rotation, firePoint.up);
         }
     }
@@ -237,6 +241,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     IEnumerator Reload()
     {
         isReloading = true;
+        audioManager.Play("GunReload");
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         isReloading = false;
@@ -285,8 +290,8 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
     [PunRPC]
     public void getGem()
     {
-        Debug.Log(name + " Gem " + gemCount.ToString());
         gemCount++;
+        audioManager.Play("GetReward");
         GameObject gemGO = GameObject.Find(gem.name);
         if (gemGO == null)
             gemGO = GameObject.Find(gem.name + "(Clone)");
