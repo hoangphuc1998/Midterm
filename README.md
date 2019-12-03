@@ -14,7 +14,7 @@
 - You can choose your robot.
 
 # Link Youtube Demo:
-https://www.youtube.com/watch?v=hpgyGvjj4n0
+https://youtu.be/dyhufXxIEUE
 
 # Resources
 - Tilemap: https://opengameart.org/content/lpc-tile-atlas
